@@ -15,7 +15,7 @@ For simplicity purposes this task avoids deleting any files and it is not trying
 
 To use this task you will need to include the following configuration in your _grunt_ file:
 
-```json
+```javascript
 ftp-deploy: {
   build: {
     auth: {
