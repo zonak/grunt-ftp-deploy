@@ -101,7 +101,7 @@ module.exports = function(grunt) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
 
-    ftpCwd(remoteRoot + path.sep + inPath, function (err) {
+    ftpCwd(remoteRoot + '/' + inPath, function (err) {
       var files;
 
       if (err) {
