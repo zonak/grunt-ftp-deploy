@@ -129,7 +129,7 @@ module.exports = function(grunt) {
       host: this.data.auth.host,
       port: this.data.auth.port
     });
-    localRoot = this.file.src[0];
+    localRoot = this.file.src;
     remoteRoot = this.file.dest;
     user = this.data.auth.user;
     pass = null;
