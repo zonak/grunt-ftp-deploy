@@ -47,10 +47,11 @@ The parameters in our configuration are:
 
 There are two ways we can provide the password for the _ftp_ authentication:
 
-- as an optional argument to the task
-- stored in a text file named `.ftppass`
+- as an argument to the task (`pass`)
+- stored in a text file named `.ftppass` with the following format:
+`[`*`buildtarget`*`[username:password@host:port]]`
 
-The first method takes precedence over the second one.
+The second method takes precedence over the first one.
 
 ## Dependencies
 
