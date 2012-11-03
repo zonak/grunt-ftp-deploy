@@ -23,6 +23,7 @@ module.exports = function(grunt) {
   var currPath;
   var user;
   var pass;
+  var passKey;
 
   // A method for parsing the source location and storing the information into a suitably formated object
   function dirParseSync(startDir, result) {
@@ -120,6 +121,17 @@ module.exports = function(grunt) {
     });
   }
 
+  function getPassByKey (inKey) {
+    var tmpStr;
+    var retVal = null;
+
+    if (fs.existsSync('.ftppass')) {
+      tmpStr = grunt.file.read('.ftppass');
+      if (inKey != null && tmpStr.length) retVal = JSON.parse(tmpStr)[inKey];
+    }
+    return retVal;
+  }
+
   // The main grunt task
   grunt.registerMultiTask('ftp-deploy', 'Deploy code over FTP', function() {
     var done = this.async();
@@ -132,6 +144,7 @@ module.exports = function(grunt) {
     localRoot = this.file.src;
     remoteRoot = this.file.dest;
     user = this.data.auth.user;
+    passKey = this.data.auth.passKey;
     pass = null;
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
@@ -139,8 +152,8 @@ module.exports = function(grunt) {
     // If there is a password provided as an argument
     if (this.args.length) {
       pass = this.args[0];
-    } else if (fs.existsSync('.ftppass')) { // If there is a `.ftppass` file found in the root of the project get the password from there
-      pass = grunt.file.read('.ftppass');
+    } else { // If there is a `.ftppass` file found in the root of the project get the password from there
+      pass = getPassByKey(passKey);
     }
 
     // Checking if we have all the necessary credentilas before we proceed

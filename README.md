@@ -9,7 +9,7 @@ These days _git_ is not only our goto code management tool but in many cases our
 
 This is why a _grunt_ task like this would be very useful.
 
-For simplicity purposes this task avoids deleting any files and it is not trying to do any size or time stamp comparison. It simply transfers all the files (and folder structure) from your dev location to a location on your server.
+For simplicity purposes this task avoids deleting any files and it is not trying to do any size or time stamp comparison. It simply transfers all the files (and folder structure) from your dev / build location to a location on your server.
 
 ## Usage
 
@@ -21,7 +21,8 @@ ftp-deploy: {
     auth: {
       host: 'server.com',
       port: 21,
-      user: 'myUserName'
+      user: 'myUserName',
+      passKey: 'key1'
     },
     src: 'build',
     dest: '/path/to/destination/folder'
@@ -40,6 +41,7 @@ The parameters in our configuration are:
 - **host** - the name or the IP address of the server we are deploying to
 - **port** - the port that the _ftp_ service is running on
 - **user** - the username we authenticate ourselves with
+- **passKey** - an optional key for looking up a saved password (explained later)
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 
@@ -47,10 +49,21 @@ The parameters in our configuration are:
 
 There are two ways we can provide the password for the _ftp_ authentication:
 
-- as an optional argument to the task
-- stored in a text file named `.ftppass`
+- as an argument to the task invocation
+- stored as a value in a JSON object in a file named `.ftppass`
 
-The first method takes precedence over the second one.
+The first method takes precedence over the second.
+
+Should you decide to store your passwords in a `.ftppass` file it should have the following format:
+
+```javascript
+{
+  "key1": "password1",
+  "key2": "password2"
+}
+```
+
+This way we can save as many passwords as we want and look them up by the `passKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
 
 ## Dependencies
 
