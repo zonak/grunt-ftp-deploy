@@ -21,7 +21,8 @@ ftp-deploy: {
     auth: {
       host: 'server.com',
       port: 21,
-      user: 'myUserName'
+      user: 'myUserName',
+      pass: 'myPass'
     },
     src: 'build',
     dest: '/path/to/destination/folder'
@@ -29,7 +30,21 @@ ftp-deploy: {
 }
 ```
 
-and load the task:
+If you decide to use an external `.ftppass` file for authentication you can omit the `auth`-property:
+```javascript
+ftp-deploy: {
+  mybuild: {
+    src: 'build',
+    dest: '/path/to/destination/folder'
+  }
+}
+```
+To specify server credentials in the second case create a textfile named `.ftppass` with the following format:
+`[mybuild[myUserName:myPass@server.com:21]]`
+
+The second method takes precedence over the first one.
+
+Then load the task:
 
 ```javascript
 grunt.loadNpmTasks('grunt-ftp-deploy');
@@ -42,16 +57,6 @@ The parameters in our configuration are:
 - **user** - the username we authenticate ourselves with
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
-
-## Password management
-
-There are two ways we can provide the password for the _ftp_ authentication:
-
-- as an argument to the task (`pass`)
-- stored in a text file named `.ftppass` with the following format:
-`[build[myUserName:myPass@server.com:21]]`
-
-The second method takes precedence over the first one.
 
 ## Dependencies
 
