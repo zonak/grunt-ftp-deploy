@@ -101,7 +101,7 @@ module.exports = function(grunt) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
 
-    ftpCwd(remoteRoot + '/' + inPath.replace(/\\/gi, '/'), function (err) {
+    ftpCwd(remoteRoot + '/' + inPath.replace(/\\/gi,'/'), function (err) {
       var files;
 
       if (err) {
@@ -122,26 +122,44 @@ module.exports = function(grunt) {
 
   // The main grunt task
   grunt.registerMultiTask('ftp-deploy', 'Deploy code over FTP', function() {
+
     var done = this.async();
+    var target = this.target;
+    var auth;
+
+    if (fs.existsSync('.ftppass')) { // If there is a `.ftppass` file found in the root of the project get the password from there
+      passfile = grunt.file.read('.ftppass');
+      passfile.split('\n').forEach(function(line) {
+        var aliasMatch = new RegExp("\\[" + target + "\\[(.*):(.*)@(.*):(.*)\\]\\]", "g");
+        var authResult = aliasMatch.exec(line);
+        if(authResult) {
+          auth = {
+            host: authResult[3],
+            user: authResult[1],
+            pass: authResult[2],
+            port: authResult[4]
+          };
+        }
+        return;
+      });
+    }
+
+    var host = auth && auth.host || this.data.auth.host; 
+    var port = auth && auth.port || this.data.auth.port;
+    var user = (auth && auth.user) || auth.user === '' ? auth.user : this.data.auth.user;
+    var pass = (auth && auth.pass) || auth.pass === '' ? auth.pass : this.data.auth.pass;
 
     // Init
     ftp = new Ftp({
-      host: this.data.auth.host,
-      port: this.data.auth.port
+      host: host,
+      port: port
     });
+
     localRoot = this.file.src;
     remoteRoot = this.file.dest;
-    user = this.data.auth.user;
-    pass = null;
+
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
-
-    // If there is a password provided as an argument
-    if (this.args.length) {
-      pass = this.args[0];
-    } else if (fs.existsSync('.ftppass')) { // If there is a `.ftppass` file found in the root of the project get the password from there
-      pass = grunt.file.read('.ftppass');
-    }
 
     // Checking if we have all the necessary credentilas before we proceed
     if (user == null || pass == null) {
