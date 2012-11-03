@@ -49,7 +49,7 @@ There are two ways we can provide the password for the _ftp_ authentication:
 
 - as an argument to the task (`pass`)
 - stored in a text file named `.ftppass` with the following format:
-`[`*`buildtarget`*`[username:password@host:port]]`
+`[build[myUserName:myPass@server.com:21]]`
 
 The second method takes precedence over the first one.
 
