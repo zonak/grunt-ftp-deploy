@@ -9,6 +9,8 @@
 
 module.exports = function(grunt) {
 
+  grunt.util = grunt.util || grunt.utils;
+
   var async = grunt.util.async;
   var log = grunt.log;
   var _ = grunt.util._;
@@ -34,7 +36,8 @@ module.exports = function(grunt) {
 
     // initialize the `result` object if it is the first iteration
     if (result === undefined) {
-      result = {'/': []};
+      result = {};
+      result[path.sep] = [];
     }
 
     // check if `startDir` is a valid location
@@ -55,7 +58,7 @@ module.exports = function(grunt) {
       } else {
         tmpPath = path.relative(localRoot, startDir);
         if (!tmpPath.length) {
-          tmpPath = '/';
+          tmpPath = path.sep;
         }
         result[tmpPath].push(files[i]);
       }
@@ -141,8 +144,8 @@ module.exports = function(grunt) {
       host: this.data.auth.host,
       port: this.data.auth.port
     });
-    localRoot = this.file.src;
-    remoteRoot = this.file.dest;
+    localRoot = Array.isArray(this.file.src) ? this.file.src[0] : this.file.src;
+    remoteRoot = Array.isArray(this.file.dest) ? this.file.dest[0] : this.file.dest;
     user = this.data.auth.user;
     passKey = this.data.auth.passKey;
     pass = null;
