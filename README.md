@@ -21,8 +21,7 @@ ftp-deploy: {
     auth: {
       host: 'server.com',
       port: 21,
-      user: 'myUserName',
-      passKey: 'key1'
+      authKey: 'key1'
     },
     src: 'build',
     dest: '/path/to/destination/folder'
@@ -40,30 +39,28 @@ The parameters in our configuration are:
 
 - **host** - the name or the IP address of the server we are deploying to
 - **port** - the port that the _ftp_ service is running on
-- **user** - the username we authenticate ourselves with
-- **passKey** - an optional key for looking up a saved password (explained later)
+- **authKey** - a key for looking up the saved credentials
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 
-## Password management
+## Authentication parameters
 
-There are two ways we can provide the password for the _ftp_ authentication:
-
-- as an argument to the task invocation
-- stored as a value in a JSON object in a file named `.ftppass`
-
-The first method takes precedence over the second.
-
-Should you decide to store your passwords in a `.ftppass` file it should have the following format:
+Usernames and passwords are stored as a JSON object in a file named `.ftppass` file that should have the following format:
 
 ```javascript
 {
-  "key1": "password1",
-  "key2": "password2"
+  "key1": {
+    "username": "username1",
+    "password": password1"
+  },
+  "key2": {
+    "username": "username2",
+    "password": "password2"
+  }
 }
 ```
 
-This way we can save as many passwords as we want and look them up by the `passKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
+This way we can save as many username / password combinations as we want and look them up by the `authKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
 
 ## Dependencies
 
