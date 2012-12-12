@@ -90,7 +90,9 @@ module.exports = function(grunt) {
 
   // A method for uploading a single file
   function ftpPut(inFilename, cb) {
-    ftp.put(inFilename, grunt.file.read(localRoot + path.sep + currPath + path.sep + inFilename), function(err) {
+    var fileData = fs.readFileSync(localRoot + path.sep + currPath + path.sep + inFilename);
+
+    ftp.put(inFilename, fileData, function(err) {
       if(err) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
         cb(err);
