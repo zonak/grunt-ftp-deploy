@@ -51,13 +51,13 @@ Usernames and passwords are stored as a JSON object in a file named `.ftppass` f
 
 ```javascript
 {
-  "key1": {
-    "username": "username1",
-    "password": password1"
+  'key1': {
+    'username': 'username1',
+    'password': 'password1'
   },
-  "key2": {
-    "username": "username2",
-    "password": "password2"
+  'key2': {
+    'username': 'username2',
+    'password': 'password2'
   }
 }
 ```
