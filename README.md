@@ -16,15 +16,16 @@ For simplicity purposes this task avoids deleting any files and it is not trying
 To use this task you will need to include the following configuration in your _grunt_ file:
 
 ```javascript
-ftp-deploy: {
+'ftp-deploy': {
   build: {
     auth: {
       host: 'server.com',
       port: 21,
       authKey: 'key1'
     },
-    src: 'build',
-    dest: '/path/to/destination/folder'
+    src: '/path/to/source/folder',
+    dest: '/path/to/destination/folder',
+    exclusions: ['/path/to/source/folder/**/.DS_Store', '/path/to/source/folder/**/Thumbs.db', 'dist/tmp']
   }
 }
 ```
@@ -42,6 +43,7 @@ The parameters in our configuration are:
 - **authKey** - a key for looking up the saved credentials
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
+- **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for `minimatch`. Please note that the definitions should be relative to the project root.
 
 ## Authentication parameters
 

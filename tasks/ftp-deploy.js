@@ -14,6 +14,7 @@ module.exports = function(grunt) {
   var async = grunt.util.async;
   var log = grunt.log;
   var _ = grunt.util._;
+  var file = grunt.file;
   var fs = require('fs');
   var path = require('path');
   var Ftp = require('jsftp');
@@ -24,6 +25,7 @@ module.exports = function(grunt) {
   var remoteRoot;
   var currPath;
   var authVals;
+  var exclusions;
 
   // A method for parsing the source location and storing the information into a suitably formated object
   function dirParseSync(startDir, result) {
@@ -46,19 +48,21 @@ module.exports = function(grunt) {
     // iterate throught the contents of the `startDir` location of the current iteration
     files = fs.readdirSync(startDir);
     for (i = 0; i < files.length; i++) {
-      currFile = fs.lstatSync(startDir + path.sep + files[i]);
-      if (currFile.isDirectory()) {
-        tmpPath = path.relative(localRoot, startDir + path.sep + files[i]);
-        if (!_.has(result, tmpPath)) {
-          result[tmpPath] = [];
+      currFile = startDir + path.sep + files[i];
+      if (!file.isMatch(exclusions, currFile)) {
+        if (file.isDir(currFile)) {
+          tmpPath = path.relative(localRoot, startDir + path.sep + files[i]);
+          if (!_.has(result, tmpPath)) {
+            result[tmpPath] = [];
+          }
+          dirParseSync(startDir + path.sep + files[i], result);
+        } else {
+          tmpPath = path.relative(localRoot, startDir);
+          if (!tmpPath.length) {
+            tmpPath = path.sep;
+          }
+          result[tmpPath].push(files[i]);
         }
-        dirParseSync(startDir + path.sep + files[i], result);
-      } else {
-        tmpPath = path.relative(localRoot, startDir);
-        if (!tmpPath.length) {
-          tmpPath = path.sep;
-        }
-        result[tmpPath].push(files[i]);
       }
     }
 
@@ -145,6 +149,7 @@ module.exports = function(grunt) {
     localRoot = Array.isArray(this.file.src) ? this.file.src[0] : this.file.src;
     remoteRoot = Array.isArray(this.file.dest) ? this.file.dest[0] : this.file.dest;
     authVals = getAuthByKey(this.data.auth.authKey);
+    exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
 
