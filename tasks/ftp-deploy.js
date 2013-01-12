@@ -50,9 +50,9 @@ module.exports = function(grunt) {
     for (i = 0; i < files.length; i++) {
       currFile = startDir + path.sep + files[i];
       if (!file.isMatch(exclusions, currFile)) {
-        if (file.isDir(currFile)) {
+        if (fs.statSync(currFile).isDirectory()) {
           tmpPath = path.relative(localRoot, startDir + path.sep + files[i]);
-          if (!_.has(result, tmpPath)) {
+          if (!(tmpPath in result)) {
             result[tmpPath] = [];
           }
           dirParseSync(startDir + path.sep + files[i], result);
