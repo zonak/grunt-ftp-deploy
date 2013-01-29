@@ -148,8 +148,9 @@ module.exports = function(grunt) {
       host: this.data.auth.host,
       port: this.data.auth.port
     });
-    localRoot = Array.isArray(this.file.src) ? this.file.src[0] : this.file.src;
-    remoteRoot = Array.isArray(this.file.dest) ? this.file.dest[0] : this.file.dest;
+
+    localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
+    remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
     authVals = getAuthByKey(this.data.auth.authKey);
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
