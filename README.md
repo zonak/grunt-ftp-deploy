@@ -51,18 +51,20 @@ Usernames and passwords are stored as a JSON object in a file named `.ftppass` f
 
 ```javascript
 {
-  'key1': {
-    'username': 'username1',
-    'password': 'password1'
+  "key1": {
+    "username": "username1",
+    "password": "password1"
   },
-  'key2': {
-    'username': 'username2',
-    'password': 'password2'
+  "key2": {
+    "username": "username2",
+    "password": "password2"
   }
 }
 ```
 
 This way we can save as many username / password combinations as we want and look them up by the `authKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
+
+**IMPORTANT**: make sure that the `.ftppass` file uses double quotes (which is the proper _JSON_ syntax) instead of single quotes for the names of the keys and the string values.
 
 ## Dependencies
 
