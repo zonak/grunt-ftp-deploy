@@ -68,5 +68,5 @@ This way we can save as many username / password combinations as we want and loo
 
 ## Dependencies
 
-This task is built by taking advantage of the great work of Sergi Mansilla and his [jsftp](https://github.com/sergi/jsftp) _node.js_ module.
+This task is built by taking advantage of the great work of Sergi Mansilla and his [jsftp](https://github.com/sergi/jsftp) _node.js_ module and suited for the **0.4.x** branch of _grunt_.
 
