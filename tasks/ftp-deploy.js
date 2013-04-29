@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 
     // check if `startDir` is a valid location
     if (!fs.existsSync(startDir)) {
-      grunt.warn(startDir + 'is not an existing location');
+      grunt.warn(startDir + ' is not an existing location');
     }
 
     // iterate throught the contents of the `startDir` location of the current iteration
@@ -109,7 +109,7 @@ module.exports = function(grunt) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
 
-    ftpCwd(remoteRoot + '/' + inPath.replace(/\\/gi, '/'), function (err) {
+    ftpCwd(remoteRoot + '/' + inPath.replace(/\\/gi, '/' +  '/'), function (err) {
       var files;
 
       if (err) {
