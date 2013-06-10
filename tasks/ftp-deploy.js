@@ -156,7 +156,7 @@ module.exports = function(grunt) {
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
 
-    // Checking if we have all the necessary credentilas before we proceed
+    // Checking if we have all the necessary credentials before we proceed
     if (authVals == null || authVals.username == null || authVals.password == null) {
       grunt.warn('Username or Password not found!');
     }
