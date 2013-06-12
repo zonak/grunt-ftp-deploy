@@ -47,7 +47,7 @@ The parameters in our configuration are:
 
 ## Authentication parameters
 
-Usernames and passwords are stored as a JSON object in a file named `.ftppass` file that should have the following format:
+Usernames and passwords are stored as a JSON object in a file named `.ftppass`. This file should be located in the same folder as your `Gruntfile`. `.ftppass` should have the following format:
 
 ```javascript
 {
