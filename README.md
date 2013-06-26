@@ -40,7 +40,7 @@ The parameters in our configuration are:
 
 - **host** - the name or the IP address of the server we are deploying to
 - **port** - the port that the _ftp_ service is running on
-- **authKey** - a key for looking up the saved credentials
+- **authKey** - a key for looking up the saved credentials. If no value is defined, the `host` parameter will be used
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for `minimatch`. Please note that the definitions should be relative to the project root.
