@@ -103,13 +103,13 @@ module.exports = function(grunt) {
     });
   }
 
-  // A method that processes a location - changes to a fodler and uploads all respective files
+  // A method that processes a location - changes to a folder and uploads all respective files
   function ftpProcessLocation (inPath, cb) {
     if (!toTransfer[inPath]) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
 
-    ftpCwd('/'+remoteRoot + '/' + inPath.replace(/\\/gi, '/'), function (err) {
+    ftpCwd('/' + remoteRoot + '/' + inPath.replace(/\\/gi, '/'), function (err) {
       var files;
 
       if (err) {
