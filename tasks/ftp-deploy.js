@@ -131,7 +131,7 @@ module.exports = function(grunt) {
 
   function getAuthByKey (inKey) {
     var tmpStr;
-    var retVal = null;
+    var retVal = {};
 
     if (fs.existsSync('.ftppass')) {
       tmpStr = grunt.file.read('.ftppass');
@@ -152,7 +152,7 @@ module.exports = function(grunt) {
 
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
-    authVals = getAuthByKey(this.data.auth.authKey) || {};
+    authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey) : getAuthByKey(this.data.auth.host);
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
@@ -163,7 +163,7 @@ module.exports = function(grunt) {
     if (!authVals.password) needed.properties.password = {hidden:true};
     prompt.get(needed, function (err, result) {
       if (err) {
-        grunt.warn(err);
+        grunt.warn('Authentication ' + err);
       }
       if (result.username) authVals.username = result.username;
       if (result.password) authVals.password = result.password;
