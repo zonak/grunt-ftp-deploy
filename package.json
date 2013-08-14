@@ -24,6 +24,7 @@
     "node": "*"
   },
   "dependencies": {
+    "prompt": "~0.2.11",
     "jsftp": "0.6.x",
     "grunt": "0.4.x"
   },
