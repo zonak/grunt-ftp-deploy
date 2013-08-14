@@ -18,6 +18,7 @@ module.exports = function(grunt) {
   var fs = require('fs');
   var path = require('path');
   var Ftp = require('jsftp');
+  var prompt = require('prompt');
 
   var toTransfer;
   var ftp;
@@ -49,7 +50,7 @@ module.exports = function(grunt) {
     files = fs.readdirSync(startDir);
     for (i = 0; i < files.length; i++) {
       currFile = startDir + path.sep + files[i];
-      if (!file.isMatch(exclusions, currFile)) {
+      if (!file.isMatch({matchBase:true}, exclusions, currFile)) {
         if (file.isDir(currFile)) {
           tmpPath = path.relative(localRoot, startDir + path.sep + files[i]);
           if (!_.has(result, tmpPath)) {
@@ -151,38 +152,45 @@ module.exports = function(grunt) {
 
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
-    authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey) : getAuthByKey(this.data.auth.host);
+    authVals = getAuthByKey(this.data.auth.authKey) || {};
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
 
-    // Checking if we have all the necessary credentials before we proceed
-    if (authVals == null || authVals.username == null || authVals.password == null) {
-      grunt.warn('Username or Password not found!');
-    }
-
-    // Authentication and main processing of files
-    ftp.auth(authVals.username, authVals.password, function(err) {
-      var locations = _.keys(toTransfer);
+    // Getting all the necessary credentials before we proceed
+    var needed = {properties: {}};
+    if (!authVals.username) needed.properties.username = {};
+    if (!authVals.password) needed.properties.password = {hidden:true};
+    prompt.get(needed, function (err, result) {
       if (err) {
-        grunt.warn('Authentication ' + err);
+        grunt.warn(err);
       }
+      if (result.username) authVals.username = result.username;
+      if (result.password) authVals.password = result.password;
 
-      // Iterating through all location from the `localRoot` in parallel
-      async.forEachSeries(locations, ftpProcessLocation, function() {
-        ftp.raw.quit(function(err) {
-          if (err) {
-            log.error(err);
-          } else {
-            log.ok('FTP upload done!');
-          }
-          done();
+      // Authentication and main processing of files
+      ftp.auth(authVals.username, authVals.password, function(err) {
+        var locations = _.keys(toTransfer);
+        if (err) {
+          grunt.warn('Authentication ' + err);
+        }
+
+        // Iterating through all location from the `localRoot` in parallel
+        async.forEachSeries(locations, ftpProcessLocation, function() {
+          ftp.raw.quit(function(err) {
+            if (err) {
+              log.error(err);
+            } else {
+              log.ok('FTP upload done!');
+            }
+            done();
+          });
         });
       });
-    });
 
-    if (grunt.errors) {
-      return false;
-    }
+      if (grunt.errors) {
+        return false;
+      }
+    });
   });
 };
