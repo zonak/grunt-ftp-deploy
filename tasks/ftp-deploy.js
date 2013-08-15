@@ -104,7 +104,7 @@ module.exports = function(grunt) {
   }
 
   // A method that processes a location - changes to a folder and uploads all respective files
-  function ftpProcessLocation (inPath, cb) {
+  function ftpProcessLocation(inPath, cb) {
     if (!toTransfer[inPath]) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
@@ -128,7 +128,7 @@ module.exports = function(grunt) {
     });
   }
 
-  function getAuthByKey (inKey) {
+  function getAuthByKey(inKey) {
     var tmpStr;
     var retVal = null;
 
