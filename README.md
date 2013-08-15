@@ -40,14 +40,14 @@ The parameters in our configuration are:
 
 - **host** - the name or the IP address of the server we are deploying to
 - **port** - the port that the _ftp_ service is running on
-- **authKey** - a key for looking up the saved credentials. If no value is defined, the `host` parameter will be used
+- **authKey** - a key for looking up saved credentials in `.ftppass` (see next section). If no value is defined, the `host` parameter will be used
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
-- **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for `minimatch`. Please note that the definitions should be relative to the project root.
+- **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 
 ## Authentication parameters
 
-Usernames and passwords are stored as a JSON object in a file named `.ftppass`. This file should be located in the same folder as your `Gruntfile`. `.ftppass` should have the following format:
+Usernames and passwords can be stored in an optional JSON file named `.ftppass`. This file should be located in the same folder as your `Gruntfile`. `.ftppass` should have the following format:
 
 ```javascript
 {
@@ -63,6 +63,8 @@ Usernames and passwords are stored as a JSON object in a file named `.ftppass`. 
 ```
 
 This way we can save as many username / password combinations as we want and look them up by the `authKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
+
+The task prompts for credentials that are not found in `.ftppass` and it prompts for all credentials if `.ftppass` does not exist.
 
 **IMPORTANT**: make sure that the `.ftppass` file uses double quotes (which is the proper _JSON_ syntax) instead of single quotes for the names of the keys and the string values.
 
