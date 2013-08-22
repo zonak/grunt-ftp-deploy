@@ -147,7 +147,8 @@ module.exports = function(grunt) {
     // Init
     ftp = new Ftp({
       host: this.data.auth.host,
-      port: this.data.auth.port
+      port: this.data.auth.port,
+      onError: done
     });
 
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
