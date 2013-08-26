@@ -93,7 +93,7 @@ module.exports = function(grunt) {
   function ftpPut(inFilename, cb) {
     var fileData = fs.readFileSync(localRoot + path.sep + currPath + path.sep + inFilename);
 
-    ftp.put(inFilename, fileData, function(err) {
+    ftp.put(fileData, inFilename, function(err) {
       if(err) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
         cb(err);

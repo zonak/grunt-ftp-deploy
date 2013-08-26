@@ -72,3 +72,6 @@ The task prompts for credentials that are not found in `.ftppass` and it prompts
 
 This task is built by taking advantage of the great work of Sergi Mansilla and his [jsftp](https://github.com/sergi/jsftp) _node.js_ module and suited for the **0.4.x** branch of _grunt_.
 
+## Release History
+
+ * 2013-08-26    v0.1.0    Switched to the _1.x_ branch of `jsftp`.
