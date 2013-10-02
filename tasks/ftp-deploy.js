@@ -128,13 +128,13 @@ module.exports = function(grunt) {
       });
     });
   }
-
-  function getAuthByKey (inKey) {
+  function getAuthByKey (inKey, ftpPass) {
     var tmpStr;
     var retVal = {};
+	var fConfig = (ftpPass || '.ftppass');
 
-    if (fs.existsSync('.ftppass')) {
-      tmpStr = grunt.file.read('.ftppass');
+    if (fs.existsSync(fConfig)) {
+      tmpStr = grunt.file.read(fConfig);
       if (inKey != null && tmpStr.length) retVal = JSON.parse(tmpStr)[inKey];
     }
     return retVal;
@@ -151,9 +151,9 @@ module.exports = function(grunt) {
       onError: done
     });
 
-    localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
+    localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;	
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
-    authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey) : getAuthByKey(this.data.auth.host);
+    authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey, this.data.ftppass) : getAuthByKey(this.data.auth.host, this.data.ftppass);
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
