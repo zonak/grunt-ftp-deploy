@@ -74,4 +74,5 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
- * 2013-08-26    v0.1.0    Switched to the _1.x_ branch of `jsftp`.
+ * 2013-11-22    v0.1.1    Added compatibility with `grunt` _0.4.2_ and switched to `jsftp` _1.2.x_.
+ * 2013-08-26    v0.1.0    Switched to `jsftp` _1.1.x_.

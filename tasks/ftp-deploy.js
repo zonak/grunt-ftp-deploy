@@ -11,9 +11,9 @@ module.exports = function(grunt) {
 
   grunt.util = grunt.util || grunt.utils;
 
-  var async = grunt.util.async;
+  var async = require('async');
   var log = grunt.log;
-  var _ = grunt.util._;
+  var _ = require('lodash');
   var file = grunt.file;
   var fs = require('fs');
   var path = require('path');
