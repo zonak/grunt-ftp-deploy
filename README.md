@@ -1,5 +1,20 @@
 # grunt-ftp-deploy
 
+## Getting Started
+This plugin requires Grunt `~0.4.0`
+
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
+
+```shell
+npm install grunt-ftp-deploy --save-dev
+```
+
+and load the task:
+
+```javascript
+grunt.loadNpmTasks('grunt-ftp-deploy');
+```
+
 This is a [grunt](https://github.com/gruntjs/grunt) task for code deployment over the _ftp_ protocol.
 
 These days _git_ is not only our goto code management tool but in many cases our deployment tool as well. But there are many cases where _git_ is not really fit for deployment:
@@ -30,11 +45,6 @@ To use this task you will need to include the following configuration in your _g
 }
 ```
 
-and load the task:
-
-```javascript
-grunt.loadNpmTasks('grunt-ftp-deploy');
-```
 
 The parameters in our configuration are:
 
