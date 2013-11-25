@@ -11,6 +11,22 @@ This is why a _grunt_ task like this would be very useful.
 
 For simplicity purposes this task avoids deleting any files and it is not trying to do any size or time stamp comparison. It simply transfers all the files (and folder structure) from your dev / build location to a location on your server.
 
+## Getting Started
+
+This plugin requires Grunt `~0.4.0`
+
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
+
+```shell
+npm install grunt-ftp-deploy --save-dev
+```
+
+and load the task:
+
+```javascript
+grunt.loadNpmTasks('grunt-ftp-deploy');
+```
+
 ## Usage
 
 To use this task you will need to include the following configuration in your _grunt_ file:
@@ -28,12 +44,6 @@ To use this task you will need to include the following configuration in your _g
     exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'dist/tmp']
   }
 }
-```
-
-and load the task:
-
-```javascript
-grunt.loadNpmTasks('grunt-ftp-deploy');
 ```
 
 The parameters in our configuration are:
