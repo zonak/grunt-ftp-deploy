@@ -153,6 +153,11 @@ module.exports = function (grunt) {
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
     authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey) : getAuthByKey(this.data.auth.host);
+
+    // Override the auth vals if set in gruntfile
+    if(this.data.auth.username) authVals.username = this.data.auth.username;
+    if(this.data.auth.password) authVals.password = this.data.auth.password;
+
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
