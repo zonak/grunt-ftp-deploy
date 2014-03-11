@@ -46,7 +46,7 @@ To use this task you will need to include the following configuration in your _g
 }
 ```
 
-Please note that when defining paths for sources, destionstaions, exclusions e.t.c they need to be defined having the root of the project as a reference point.
+Please note that when defining paths for sources, destinations, exclusions e.t.c they need to be defined having the root of the project as a reference point.
 
 The parameters in our configuration are:
 
