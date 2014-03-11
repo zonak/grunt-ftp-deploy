@@ -41,10 +41,12 @@ To use this task you will need to include the following configuration in your _g
     },
     src: 'path/to/source/folder',
     dest: '/path/to/destination/folder',
-    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'dist/tmp']
+    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
   }
 }
 ```
+
+Please note that when defining paths for sources, destionstaions, exclusions e.t.c they need to be defined having the root of the project as a reference point.
 
 The parameters in our configuration are:
 
