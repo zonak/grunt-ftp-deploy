@@ -135,7 +135,7 @@ module.exports = function (grunt) {
     if (fs.existsSync('.ftppass')) {
       tmpStr = grunt.file.read('.ftppass');
       if (inKey != null && tmpStr.length) retVal = JSON.parse(tmpStr)[inKey];
-    }
+    } else grunt.warn('\'authKey\' configuration provided but no valid \'.ftppass\' file found!');
     return retVal;
   }
 
