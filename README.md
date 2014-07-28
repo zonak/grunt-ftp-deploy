@@ -52,14 +52,15 @@ The parameters in our configuration are:
 
 - **host** - the name or the IP address of the server we are deploying to
 - **port** - the port that the _ftp_ service is running on
-- **authKey** - a key for looking up saved credentials in `.ftppass` (see next section). If no value is defined, the `host` parameter will be used
+- **authPath** - an optional path to a file with credentials that defaults to `.ftppass` in the project folder if not provided
+- **authKey** - a key for looking up credentials saved in a file (see next section). If no value is defined, the `host` parameter will be used
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 
 ## Authentication parameters
 
-Usernames and passwords can be stored in an optional JSON file named `.ftppass`. This file should be located in the same folder as your `Gruntfile`. `.ftppass` should have the following format:
+Usernames and passwords can be stored in an optional JSON file (`.ftppass` in the project folder or optionaly defined in`authPath`). The credentials file should have the following format:
 
 ```javascript
 {
@@ -76,9 +77,9 @@ Usernames and passwords can be stored in an optional JSON file named `.ftppass`.
 
 This way we can save as many username / password combinations as we want and look them up by the `authKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
 
-The task prompts for credentials that are not found in `.ftppass` and it prompts for all credentials if `.ftppass` does not exist.
+The task prompts for credentials that are not found in the credentials file and it prompts for all credentials if a credentials file does not exist.
 
-**IMPORTANT**: make sure that the `.ftppass` file uses double quotes (which is the proper _JSON_ syntax) instead of single quotes for the names of the keys and the string values.
+**IMPORTANT**: make sure that the credentials file uses double quotes (which is the proper _JSON_ syntax) instead of single quotes for the names of the keys and the string values.
 
 ## Dependencies
 
@@ -86,6 +87,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2014-07-28    v0.1.4    Added a `authPath` configuration option.
  * 2014-05-05    v0.1.3    Added warning if an `authKey` is provided and no `.ftppass` is found.
  * 2013-11-22    v0.1.1    Added compatibility with `grunt` _0.4.2_ and switched to `jsftp` _1.2.x_.
  * 2013-08-26    v0.1.0    Switched to `jsftp` _1.1.x_.
