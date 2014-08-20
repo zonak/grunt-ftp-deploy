@@ -5,7 +5,7 @@ module.exports = function (grunt) {
       build: {
         auth: {
           host: 'localhost',
-          port: 4000,
+          port: 3334,
           authKey: 'key1',
           authPath: './test/.ftpconfig'
         },
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
     mockServer.init({
       user: 'test',
       pass: 'test',
-      port: 4000
+      port: 3334
     });
 
     mockServer.on('stdout', process.stdout.write.bind(process.stdout));
