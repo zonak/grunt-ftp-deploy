@@ -87,6 +87,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2014-07-28    v0.1.5    Refresh of versions of used modules.
  * 2014-07-28    v0.1.4    Added a `authPath` configuration option.
  * 2014-05-05    v0.1.3    Added warning if an `authKey` is provided and no `.ftppass` is found.
  * 2013-11-22    v0.1.1    Added compatibility with `grunt` _0.4.2_ and switched to `jsftp` _1.2.x_.

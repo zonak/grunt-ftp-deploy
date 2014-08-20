@@ -1,7 +1,7 @@
 {
   "name": "grunt-ftp-deploy",
   "description": "Deployment over FTP",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "homepage": "https://github.com/zonak/grunt-ftp-deploy",
   "author": {
     "name": "Zoran Nakev",
@@ -24,11 +24,11 @@
     "node": "*"
   },
   "dependencies": {
-    "prompt": "~0.2.11",
-    "jsftp": "~1.2.x",
-    "grunt": "~0.4.2",
-    "lodash": "~2.3.0",
-    "async": "~0.2.9"
+    "prompt": "^0.2.x",
+    "jsftp": "^1.3.x",
+    "grunt": "^0.4.x",
+    "lodash": "^2.4.x",
+    "async": "^0.9.x"
   },
   "devDependencies": {
     "grunt": "^0.4.2",
