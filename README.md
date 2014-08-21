@@ -87,6 +87,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2014-08-20    v0.1.6    Bug fix with the modules updates.
  * 2014-08-20    v0.1.5    Refresh of versions of used modules.
  * 2014-07-28    v0.1.4    Added a `authPath` configuration option.
  * 2014-05-05    v0.1.3    Added warning if an `authKey` is provided and no `.ftppass` is found.
