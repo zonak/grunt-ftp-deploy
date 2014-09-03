@@ -128,16 +128,24 @@ module.exports = function (grunt) {
     });
   }
 
-  function getAuthByKey (inKey, inAuthPath) {
-    var tmpStr;
-    var retVal = {};
-    var authFile = path.resolve(inAuthPath || '.ftppass');
+  function getAuthVals(inAuth) {
+    var tmpData;
+    var authFile = path.resolve(inAuth.authPath || '.ftppass');
 
+    // If authentication values are provided in the grunt file itself
+    if (inAuth.username && inAuth.password) return {
+      username: inAuth.username,
+      password: inAuth.password
+    };
+
+    // If there is a valid auth file provided
     if (fs.existsSync(authFile)) {
-      tmpStr = grunt.file.read(authFile);
-      if (inKey != null && tmpStr.length) retVal = JSON.parse(tmpStr)[inKey];
-    } else grunt.warn('\'authKey\' configuration provided but no valid \'.ftppass\' file found!');
-    return retVal;
+      tmpData = JSON.parse(grunt.file.read(authFile));
+      if (inAuth.authKey) return tmpData[inAuth.authKey] || {};
+      if (inAuth.host) return tmpData[inAuth.host] || {};
+    } else if (inAuth.authKey) grunt.warn('\'authKey\' configuration provided but no valid \'.ftppass\' file found!');
+
+    return {};
   }
 
   // The main grunt task
@@ -153,12 +161,7 @@ module.exports = function (grunt) {
 
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
-    authVals = this.data.auth.authKey ? getAuthByKey(this.data.auth.authKey, this.data.auth.authPath) : getAuthByKey(this.data.auth.host, this.data.auth.authPath);
-
-    // Override the auth vals if set in gruntfile
-    if(this.data.auth.username) authVals.username = this.data.auth.username;
-    if(this.data.auth.password) authVals.password = this.data.auth.password;
-
+    authVals = getAuthVals(this.data.auth);
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
