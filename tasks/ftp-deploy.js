@@ -133,9 +133,11 @@ module.exports = function (grunt) {
     var authFile = path.resolve(inAuth.authPath || '.ftppass');
 
     // If authentication values are provided in the grunt file itself
-    if (inAuth.username && inAuth.password) return {
-      username: inAuth.username,
-      password: inAuth.password
+    var username = inAuth.username;
+    var password = inAuth.password;
+    if (typeof username != 'undefined' && username != null && typeof password != 'undefined' && password != null) return {
+      username: username,
+      password: password
     };
 
     // If there is a valid auth file provided
