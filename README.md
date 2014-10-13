@@ -87,6 +87,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2014-09-03    v0.1.8    Allow empty strings to be used as login details.
  * 2014-09-03    v0.1.7    Restructured the code deailing with the authentication values to address some issues.
  * 2014-08-20    v0.1.6    Bug fix with the modules updates.
  * 2014-08-20    v0.1.5    Refresh of versions of used modules.

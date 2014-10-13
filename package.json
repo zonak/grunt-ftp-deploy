@@ -1,7 +1,7 @@
 {
   "name": "grunt-ftp-deploy",
   "description": "Deployment over FTP",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "homepage": "https://github.com/zonak/grunt-ftp-deploy",
   "author": {
     "name": "Zoran Nakev",
