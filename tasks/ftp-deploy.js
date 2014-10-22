@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 
   var async = require('async');
   var log = grunt.log;
+  var verbose = grunt.verbose;
   var _ = require('lodash');
   var file = grunt.file;
   var fs = require('fs');
@@ -97,7 +98,7 @@ module.exports = function (grunt) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
         done(err);
       } else {
-        grunt.verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+        verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
         done(null);
       }
     });
