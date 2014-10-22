@@ -97,7 +97,7 @@ module.exports = function (grunt) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
         done(err);
       } else {
-        log.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+        grunt.verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
         done(null);
       }
     });
