@@ -28,6 +28,7 @@ module.exports = function (grunt) {
   var currPath;
   var authVals;
   var exclusions;
+  var forceVerbose;
 
   // A method for parsing the source location and storing the information into a suitably formated object
   function dirParseSync (startDir, result) {
@@ -98,7 +99,11 @@ module.exports = function (grunt) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
         done(err);
       } else {
-        verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+        if (forceVerbose) {
+          log.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+        } else {
+          verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+        }
         done(null);
       }
     });
@@ -168,6 +173,7 @@ module.exports = function (grunt) {
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
+    forceVerbose = this.data.forceVerbose === true ? true : false;
 
     // Getting all the necessary credentials before we proceed
     var needed = {properties: {}};

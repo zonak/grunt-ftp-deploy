@@ -57,6 +57,7 @@ The parameters in our configuration are:
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
+- **forceVerbose** - if set to `true` forces the output verbosity.
 
 ## Authentication parameters
 
@@ -87,6 +88,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
  * 2014-10-13    v0.1.8    Allow empty strings to be used as login details.
  * 2014-09-03    v0.1.7    Restructured the code deailing with the authentication values to address some issues.
