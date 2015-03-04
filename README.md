@@ -44,7 +44,7 @@ To use this task you will need to include the following configuration in your _g
     },
     src: 'path/to/source/folder',
     dest: '/path/to/destination/folder',
-    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
+    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp'],
     forceVerbose : true,
     forceUpload : false,
     syncMode : true,
@@ -98,15 +98,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
- * 2015-03-04    v0.2.0    Added intelligence to upload only changed files (checks by timestamp and file size)
-
-Added an option to force upload (ignore modification check)
-
-Added an option to sync server files and folders (delete extra files and folders from destination)
-
-Added an option to keep certain files or folders in destination (avoid deleting from destination)
-
-Improve paths management with path.join
+ * 2015-03-04    v0.2.0    Added syncMode and changed files upload
  * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
  * 2014-10-13    v0.1.8    Allow empty strings to be used as login details.
