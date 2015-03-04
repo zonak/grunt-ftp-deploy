@@ -10,6 +10,7 @@ These days _git_ is not only our goto code management tool but in many cases our
 This is why a _grunt_ task like this would be very useful.
 
 By default this task uploads only modified files, checking by time stamp and file size, but it also has an option to force uploading all files.
+
 This task also has an optional syncMode that deletes extra files and folders in destination.
 
 
@@ -46,8 +47,8 @@ To use this task you will need to include the following configuration in your _g
     exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
     forceVerbose : true,
     forceUpload : false,
-    syncMode : true
-	keep : ['logs'],
+    syncMode : true,
+	keep : ['logs']
   }
 }
 ```
@@ -66,7 +67,7 @@ The parameters in our configuration are:
 - **forceVerbose** - if set to `true` forces the output verbosity.
 - **forceUpload** - if set to `true` forces the upload of all files avoiding the time stamp and file size check.
 - **syncMode** - if set to `true` deletes extra files and folders in destination.
-- **keep** - an optional parameter to keep files in destination that are not in source (only used in syncMode). It uses the grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
+- **keep** - an optional parameter to keep files or folders in destination that are not present in source (only used in syncMode). It uses the grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 
 ## Authentication parameters
 
@@ -98,9 +99,13 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 ## Release History
 
  * 2015-03-04    v0.2.0    Added intelligence to upload only changed files (checks by timestamp and file size)
+
 Added an option to force upload (ignore modification check)
+
 Added an option to sync server files and folders (delete extra files and folders from destination)
+
 Added an option to keep certain files or folders in destination (avoid deleting from destination)
+
 Improve paths management with path.join
  * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
