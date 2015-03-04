@@ -1,4 +1,4 @@
-# grunt-ftp-deploy [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
+# grunt-ftp-deploy
 
 This is a [grunt](https://github.com/gruntjs/grunt) task for code deployment over the _ftp_ protocol.
 
@@ -9,7 +9,9 @@ These days _git_ is not only our goto code management tool but in many cases our
 
 This is why a _grunt_ task like this would be very useful.
 
-For simplicity purposes this task avoids deleting any files and it is not trying to do any size or time stamp comparison. It simply transfers all the files (and folder structure) from your dev / build location to a location on your server.
+By default this task uploads only modified files, checking by time stamp and file size, but it also has an option to force uploading all files.
+This task also has an optional syncMode that deletes extra files and folders in destination.
+
 
 ## Getting Started
 
@@ -42,6 +44,10 @@ To use this task you will need to include the following configuration in your _g
     src: 'path/to/source/folder',
     dest: '/path/to/destination/folder',
     exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
+    forceVerbose : true,
+    forceUpload : false,
+    syncMode : true
+	keep : ['logs'],
   }
 }
 ```
@@ -58,6 +64,9 @@ The parameters in our configuration are:
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 - **forceVerbose** - if set to `true` forces the output verbosity.
+- **forceUpload** - if set to `true` forces the upload of all files avoiding the time stamp and file size check.
+- **syncMode** - if set to `true` deletes extra files and folders in destination.
+- **keep** - an optional parameter to keep files in destination that are not in source (only used in syncMode). It uses the grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 
 ## Authentication parameters
 
@@ -88,6 +97,11 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2015-03-04    v0.2.0    Added intelligence to upload only changed files (checks by timestamp and file size)
+Added an option to force upload (ignore modification check)
+Added an option to sync server files and folders (delete extra files and folders from destination)
+Added an option to keep certain files or folders in destination (avoid deleting from destination)
+Improve paths management with path.join
  * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
  * 2014-10-13    v0.1.8    Allow empty strings to be used as login details.
@@ -98,12 +112,3 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
  * 2014-05-05    v0.1.3    Added warning if an `authKey` is provided and no `.ftppass` is found.
  * 2013-11-22    v0.1.1    Added compatibility with `grunt` _0.4.2_ and switched to `jsftp` _1.2.x_.
  * 2013-08-26    v0.1.0    Switched to `jsftp` _1.1.x_.
-
-[npm-url]: https://npmjs.org/package/grunt-ftp-deploy
-[npm-image]: https://badge.fury.io/js/grunt-ftp-deploy.png
-
-[travis-url]: http://travis-ci.org/zonak/grunt-ftp-deploy
-[travis-image]: https://secure.travis-ci.org/zonak/grunt-ftp-deploy.png?branch=master
-
-[depstat-url]: https://david-dm.org/zonak/grunt-ftp-deploy
-[depstat-image]: https://david-dm.org/zonak/grunt-ftp-deploy.png
