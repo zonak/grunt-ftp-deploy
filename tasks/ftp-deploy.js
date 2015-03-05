@@ -26,9 +26,13 @@ module.exports = function (grunt) {
   var localRoot;
   var remoteRoot;
   var currPath;
+  var currPathInfo;
   var authVals;
   var exclusions;
+  var keep;
   var forceVerbose;
+  var forceUpload;
+  var syncMode;
 
   // A method for parsing the source location and storing the information into a suitably formated object
   function dirParseSync (startDir, result) {
@@ -91,9 +95,42 @@ module.exports = function (grunt) {
     });
   }
 
+  // A method for getting info from remote path
+  function ftpLs(remotePath, cb) {
+    ftp.ls(remotePath, function (err, res) {
+      if (err) {
+        cb(err, null);
+      } else {
+        cb(null, res);
+      }
+    });
+  }
+
   // A method for uploading a single file
   function ftpPut (inFilename, done) {
     var fpath = path.normalize(localRoot + path.sep + currPath + path.sep + inFilename);
+    var fileInfo;
+    // Check filesize and timestamp to determine if it was changed
+    if (!forceUpload) {
+
+      for (var obj in currPathInfo) {
+        if (currPathInfo[obj].name == inFilename)
+          fileInfo = currPathInfo[obj];
+      }
+      if (fileInfo) {
+        var stat = fs.statSync(fpath);
+
+        if (stat.size == fileInfo.size && stat.mtime.getTime() < fileInfo.time) {
+          if (forceVerbose) {
+            log.ok('Unchanged file: ' + fpath.grey);
+          } else {
+            verbose.ok('Unchanged file: ' + fpath.grey);
+          }
+          return done(null);
+        }
+      }
+    }
+
     ftp.put(fpath, inFilename, function (err) {
       if (err) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
@@ -109,27 +146,108 @@ module.exports = function (grunt) {
     });
   }
 
+  // A method for deleting a dir
+  var rootPath;
+  function removeDir(dirPath, callback) {
+    ftpCwd(dirPath, function (err) {
+      ftpLs(dirPath, function (err, files) {
+        if (err) {
+          log.error(err);
+        } else {
+          if (files.length === 0) {
+            ftp.raw.rmd(dirPath, function (err) {
+              if (err) {
+                log.error('Error deleting directory: ' + dirPath + ' -- ' + err);
+                callback();
+              } else {
+                log.error('Deleted directory: ' + dirPath);
+                callback();
+              }
+            });
+          } else {
+            async.eachSeries(files, function (file, cb) {
+              var filePath = path.join(dirPath, file.name);
+              if (file.type == 0) {
+                removeFile(filePath, cb);
+              } else {
+                removeDir(path.join(filePath, '/'), cb);
+              }
+            }, function () {
+              removeDir(dirPath, callback);
+            });
+          }
+        }
+      })
+    });
+  }
+
+  function removeFile(filePath, callback) {
+    ftp.raw.dele(filePath, function (err) {
+      if (err) {
+        log.error('Error deleting file: ' + filePath.red + ' -- ' + err);
+        callback();
+      } else {
+        if (forceVerbose) {
+          log.ok('Deleted file: ' + filePath.red);
+        } else {
+          verbose.ok('Deleted file: ' + filePath.red);
+        }
+        callback();
+      }
+    });
+  }
+
   // A method that processes a location - changes to a folder and uploads all respective files
   function ftpProcessLocation (inPath, cb) {
     if (!toTransfer[inPath]) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
+    currPath = inPath;
+    var files = toTransfer[inPath];
 
-    ftpCwd(path.normalize('/' + remoteRoot + '/' + inPath).replace(/\\/gi, '/'), function (err) {
-      var files;
-
-      if (err) {
-        grunt.warn('Could not switch to remote folder!');
-      }
-
-      currPath = inPath;
-      files = toTransfer[inPath];
-
-      async.eachSeries(files, ftpPut, function (err) {
+    var remotePath = path.normalize(path.join('/', remoteRoot, inPath));
+    ftpCwd(remotePath, function (err) {
+      ftpLs(remotePath, function (err, res) {
         if (err) {
-          grunt.warn('Failed uploading files!');
+          grunt.warn('Could not switch to remote folder!');
         }
-        cb(null);
+        currPathInfo = res;
+
+        async.eachSeries(files, ftpPut, function (err) {
+          if (err) {
+            grunt.warn('Failed uploading files!');
+          }
+
+          // delete extra files and folders
+          if (syncMode) {
+            async.eachSeries(currPathInfo, function (obj, cb1) {
+              var fpath = path.normalize(path.join(localRoot, currPath, obj.name));
+              var remoteFile = path.normalize(path.join(remotePath, '/', obj.name, '/'));
+              try {
+                fs.statSync(fpath);
+                cb1();
+              } catch (e) {
+
+                if (!file.isMatch({
+                    matchBase : true
+                  }, keep, remoteFile)) {
+                  if (obj.type == 1) {
+                    rootPath = remoteFile;
+                    removeDir(rootPath, cb1);
+                  } else {
+                    removeFile(remoteFile, cb1);
+                  }
+                } else {
+                  cb1();
+                }
+              }
+            }, function () {
+              cb();
+            });
+          } else {
+            cb();
+          }
+        });
       });
     });
   }
@@ -171,9 +289,12 @@ module.exports = function (grunt) {
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
     authVals = getAuthVals(this.data.auth);
     exclusions = this.data.exclusions || [];
+    keep = this.data.keep || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
     forceVerbose = this.data.forceVerbose === true ? true : false;
+    forceUpload = this.data.forceUpload === true ? true : false;
+    syncMode = this.data.syncMode === true ? true : false;
 
     // Getting all the necessary credentials before we proceed
     var needed = {properties: {}};

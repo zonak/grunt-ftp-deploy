@@ -9,7 +9,10 @@ These days _git_ is not only our goto code management tool but in many cases our
 
 This is why a _grunt_ task like this would be very useful.
 
-For simplicity purposes this task avoids deleting any files and it is not trying to do any size or time stamp comparison. It simply transfers all the files (and folder structure) from your dev / build location to a location on your server.
+By default this task uploads only modified files, checking by time stamp and file size, but it also has an option to force uploading all files.
+
+This task also has an optional syncMode that deletes extra files and folders in destination.
+
 
 ## Getting Started
 
@@ -41,7 +44,11 @@ To use this task you will need to include the following configuration in your _g
     },
     src: 'path/to/source/folder',
     dest: '/path/to/destination/folder',
-    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
+    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp'],
+    forceVerbose : true,
+    forceUpload : false,
+    syncMode : true,
+	keep : ['logs']
   }
 }
 ```
@@ -58,6 +65,9 @@ The parameters in our configuration are:
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 - **forceVerbose** - if set to `true` forces the output verbosity.
+- **forceUpload** - if set to `true` forces the upload of all files avoiding the time stamp and file size check.
+- **syncMode** - if set to `true` deletes extra files and folders in destination.
+- **keep** - an optional parameter to keep files or folders in destination that are not present in source (only used in syncMode). It uses the grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 
 ## Authentication parameters
 
@@ -88,6 +98,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2015-03-04    v0.2.0    Added syncMode and changed files upload
  * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
  * 2014-10-13    v0.1.8    Allow empty strings to be used as login details.
