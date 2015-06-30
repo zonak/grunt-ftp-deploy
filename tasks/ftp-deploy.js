@@ -52,6 +52,7 @@ module.exports = function (grunt) {
     files = fs.readdirSync(startDir);
     for (i = 0; i < files.length; i++) {
       currFile = startDir + path.sep + files[i];
+
       if (!file.isMatch({matchBase: true}, exclusions, currFile)) {
         if (file.isDir(currFile)) {
           tmpPath = path.relative(localRoot, startDir + path.sep + files[i]);
@@ -100,9 +101,9 @@ module.exports = function (grunt) {
         done(err);
       } else {
         if (forceVerbose) {
-          log.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+          log.ok('Uploaded file: ' + inFilename.green + ' to: ' + path.normalize('/' + remoteRoot + '/' + inFilename).replace(/\\/gi, '/').yellow);
         } else {
-          verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + currPath.yellow);
+          verbose.ok('Uploaded file: ' + inFilename.green + ' to: ' + path.normalize('/' + remoteRoot + '/' + inFilename).replace(/\\/gi, '/').yellow);
         }
         done(null);
       }
@@ -111,6 +112,7 @@ module.exports = function (grunt) {
 
   // A method that processes a location - changes to a folder and uploads all respective files
   function ftpProcessLocation (inPath, cb) {
+
     if (!toTransfer[inPath]) {
       cb(new Error('Data for ' + inPath + ' not found'));
     }
@@ -124,6 +126,7 @@ module.exports = function (grunt) {
 
       currPath = inPath;
       files = toTransfer[inPath];
+
 
       async.eachSeries(files, ftpPut, function (err) {
         if (err) {
@@ -189,10 +192,12 @@ module.exports = function (grunt) {
       // Authentication and main processing of files
       ftp.auth(authVals.username, authVals.password, function (err) {
         var locations = _.keys(toTransfer);
+
         if (err) {
           grunt.warn('Authentication ' + err);
         }
 
+        log.ok('Connected to host');
         // Iterating through all location from the `localRoot` in parallel
         async.eachSeries(locations, ftpProcessLocation, function () {
           ftp.raw.quit(function (err) {
