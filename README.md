@@ -48,6 +48,33 @@ To use this task you will need to include the following configuration in your _g
 
 Please note that when defining paths for sources, destinations, exclusions e.t.c they need to be defined having the root of the project as a reference point.
 
+You may optionally use a function to define `src` or `dest`. For example:
+
+```javascript
+'ftp-deploy': {
+  build: {
+    auth: {
+      host: 'server.com',
+      port: 21,
+      authKey: 'key1'
+    },
+    src: function(language) {
+        language = language || 'english';
+        return 'build/' + language;
+    },
+    dest: '/path/to/destination/folder',
+    exclusions: ['path/to/source/folder/**/.DS_Store', 'path/to/source/folder/**/Thumbs.db', 'path/to/dist/tmp']
+  }
+}
+```
+The parameter can be passed like so:
+
+```shell
+grunt ftp-deploy:build:english
+```
+
+These functions can accept any number of parameters.
+
 The parameters in our configuration are:
 
 - **host** - the name or the IP address of the server we are deploying to
