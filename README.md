@@ -50,14 +50,39 @@ Please note that when defining paths for sources, destinations, exclusions e.t.c
 
 The parameters in our configuration are:
 
-- **host** - the name or the IP address of the server we are deploying to
-- **port** - the port that the _ftp_ service is running on
+- **host** - the name or the IP address of the server we are deploying to, can be defined in the `.host` file too
+- **port** - the port that the _ftp_ service is running on, can be defined in the `.host` file too
+- **hostPath** - an optional path to a file with host parameters that defaults to `.host` in the project folder if not provided
+- **hostKey** - a key for looking up parameters saved in a file (see host parameters section).
+- **username** - the username used to log in to the server, can be defined in the `.ftppass` file too
+- **password** - the password used to log in to the server, can be defined in the `.ftppass` file too
 - **authPath** - an optional path to a file with credentials that defaults to `.ftppass` in the project folder if not provided
-- **authKey** - a key for looking up credentials saved in a file (see next section). If no value is defined, the `host` parameter will be used
+- **authKey** - a key for looking up credentials saved in a file (see authentication parameters section). If no value is defined, the `host` parameter will be used
 - **src** - the source location, the local folder that we are transferring to the server
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 - **forceVerbose** - if set to `true` forces the output verbosity.
+
+## Host parameters
+
+Host and port can be stored in an optional JSON file (`.host` in the project folder or optionaly defined in`hostPath`). The parameters file should have the following format:
+
+```javascript
+{
+  "key1": {
+    "host": "192.168.0.1",
+    "port": 21
+  },
+  "key2": {
+    "host": "192.168.0.2",
+    "port": 22
+  }
+}
+```
+
+This way we can save as many hosts as we want and look them up by the `hostKey` value defined in the _grunt_ config file where the rest of the target parameters are defined.
+
+**IMPORTANT**: make sure that the credentials file uses double quotes (which is the proper _JSON_ syntax) instead of single quotes for the names of the keys and the string values.
 
 ## Authentication parameters
 

@@ -27,6 +27,7 @@ module.exports = function (grunt) {
   var remoteRoot;
   var currPath;
   var authVals;
+  var hostVals;
   var exclusions;
   var forceVerbose;
 
@@ -156,14 +157,38 @@ module.exports = function (grunt) {
     return {};
   }
 
+  function getHostVals(inHost) {
+    var tmpData;
+    var hostFile = path.resolve(inHost.hostPath || '.host');
+
+    // If authentication values are provided in the grunt file itself
+    var host = inHost.host;
+    var port = inHost.port;
+    if (typeof host != 'undefined' && host != null && typeof port != 'undefined' && port != null) return {
+      host: host,
+      port: port
+    };
+
+    // If there is a valid auth file provided
+    if (fs.existsSync(hostFile)) {
+      tmpData = JSON.parse(grunt.file.read(hostFile));
+      if (inHost.hostKey) return tmpData[inHost.hostKey] || {};
+      if (inHost.host) return tmpData[inHost.host] || {};
+    } else if (inHost.hostKey) grunt.warn('\'hostKey\' configuration provided but no valid \'.host\' file found!');
+
+    return {};
+  }
+
   // The main grunt task
   grunt.registerMultiTask('ftp-deploy', 'Deploy code over FTP', function () {
     var done = this.async();
 
+    hostVals = getHostVals(this.data.auth);
+
     // Init
     ftp = new Ftp({
-      host: this.data.auth.host,
-      port: this.data.auth.port,
+      host: hostVals.host,
+      port: hostVals.port,
       onError: done
     });
 
