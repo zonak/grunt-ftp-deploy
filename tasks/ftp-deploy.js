@@ -79,7 +79,11 @@ module.exports = function (grunt) {
         ftp.raw.mkd(inPath, function (err) {
           if(err) {
             log.error('Error creating new remote folder ' + inPath + ' --> ' + err);
-            cb(err);
+            log.ok('Trying to create all intermediary folders');
+            inPath = inPath.replace(/[/]$/g, ""); // remove trailing "/" if present
+            var pathComponents = inPath.split("/");
+            pathComponents[0] = pathComponents[0].replace(/^$/, "/"); // if path is absolute, first component should be "/"
+            ftpCwdPathComponents(pathComponents, cb);
           } else {
             log.ok('New remote folder created ' + inPath.yellow);
             ftpCwd(inPath, cb);
@@ -89,6 +93,31 @@ module.exports = function (grunt) {
         cb(null);
       }
     });
+  }
+
+  function ftpCwdPathComponents (pathComponents, cb) {
+    var folder = pathComponents.shift();
+
+    ftp.raw.cwd(folder, function (err) {
+      if (err) {
+        ftp.raw.mkd(folder, function (err) {
+          if (err) {
+            log.error('Error creating new remote folder ' + folder + ' --> ' + err);
+            cb(err);
+          } else {
+            log.ok('New remote folder created ' + folder.yellow);
+            pathComponents.unshift(folder);
+            ftpCwdPathComponents(pathComponents, cb);
+          }
+        })
+      } else {
+        if (pathComponents.length > 0) {
+          ftpCwdPathComponents(pathComponents, cb);
+        } else {
+          cb(null);
+        }
+      }
+    })
   }
 
   // A method for uploading a single file
