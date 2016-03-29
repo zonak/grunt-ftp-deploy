@@ -96,28 +96,29 @@ module.exports = function (grunt) {
   }
 
   function ftpCwdPathComponents (pathComponents, cb) {
-    var folder = pathComponents.shift();
+    if (!pathComponents || pathComponents.length === 0) {
+      cb(null);
 
-    ftp.raw.cwd(folder, function (err) {
-      if (err) {
-        ftp.raw.mkd(folder, function (err) {
-          if (err) {
-            log.error('Error creating new remote folder ' + folder + ' --> ' + err);
-            cb(err);
-          } else {
-            log.ok('New remote folder created ' + folder.yellow);
-            pathComponents.unshift(folder);
-            ftpCwdPathComponents(pathComponents, cb);
-          }
-        })
-      } else {
-        if (pathComponents.length > 0) {
-          ftpCwdPathComponents(pathComponents, cb);
+    } else {
+      var folder = pathComponents.shift();
+
+      ftp.raw.cwd(folder, function (err) {
+        if (err) {
+          ftp.raw.mkd(folder, function (err) {
+            if (err) {
+              log.error('Error creating new remote folder ' + folder + ' --> ' + err);
+              cb(err);
+            } else {
+              log.ok('New remote folder created ' + folder.yellow);
+              pathComponents.unshift(folder);
+              ftpCwdPathComponents(pathComponents, cb);
+            }
+          })
         } else {
-          cb(null);
+          ftpCwdPathComponents(pathComponents, cb);
         }
-      }
-    })
+      })
+    }
   }
 
   // A method for uploading a single file
