@@ -36,6 +36,7 @@ module.exports = function (grunt) {
     var i;
     var tmpPath;
     var currFile;
+    var startDir = grunt.template.process(startDir);
 
     // initialize the `result` object if it is the first iteration
     if (result === undefined) {
