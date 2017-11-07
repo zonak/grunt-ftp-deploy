@@ -74,9 +74,9 @@ module.exports = function (grunt) {
 
   // A method for changing the remote working directory and creating one if it doesn't already exist
   function ftpCwd (inPath, cb) {
-    ftp.raw.cwd(inPath, function (err) {
+    ftp.raw('cwd', inPath, function (err) {
       if(err){
-        ftp.raw.mkd(inPath, function (err) {
+        ftp.raw('mkd', inPath, function (err) {
           if(err) {
             log.error('Error creating new remote folder ' + inPath + ' --> ' + err);
             cb(err);
@@ -195,7 +195,7 @@ module.exports = function (grunt) {
 
         // Iterating through all location from the `localRoot` in parallel
         async.eachSeries(locations, ftpProcessLocation, function () {
-          ftp.raw.quit(function (err) {
+          ftp.raw('quit', function (err) {
             if (err) {
               log.error(err);
             } else {
