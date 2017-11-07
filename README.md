@@ -88,6 +88,7 @@ This task is built by taking advantage of the great work of Sergi Mansilla and h
 
 ## Release History
 
+ * 2017-11-07    v0.2.0    Dependency updates.
  * 2015-02-04    v0.1.10   An option to force output verbosity.
  * 2014-10-22    v0.1.9    Log successful uploads only in verbose mode.
  * 2014-10-13    v0.1.8    Allow empty strings to be used as login details.
