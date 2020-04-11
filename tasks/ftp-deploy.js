@@ -29,6 +29,8 @@ module.exports = function (grunt) {
   var authVals;
   var exclusions;
   var forceVerbose;
+  var newFilesOnly;
+  var uploadOnFileSizeErr;
 
   // A method for parsing the source location and storing the information into a suitably formated object
   function dirParseSync (startDir, result) {
@@ -94,6 +96,7 @@ module.exports = function (grunt) {
   // A method for uploading a single file
   function ftpPut (inFilename, done) {
     var fpath = path.normalize(localRoot + path.sep + currPath + path.sep + inFilename);
+
     ftp.put(fpath, inFilename, function (err) {
       if (err) {
         log.error('Cannot upload file: ' + inFilename + ' --> ' + err);
@@ -108,7 +111,38 @@ module.exports = function (grunt) {
       }
     });
   }
+  function prePut(inFilename, done){
+    if (newFilesOnly){
+      var fpath = path.normalize(localRoot + path.sep + currPath + path.sep + inFilename);
 
+      ftp.raw('SIZE',inFilename,(err,res)=>{
+        
+        var stats = fs.statSync(fpath);
+        var fileSizeInBytes = stats["size"];
+        
+        if (!err && res.code == "213"){
+          if (res.text.substr(4) == fileSizeInBytes){
+            log.ok(inFilename + " is same size. Ignoring");
+            done(null);
+          } else {
+            ftpPut(inFilename, done);
+          }
+        } else {
+          if (uploadOnFileSizeErr) {
+            log.warn("Error getting file size, trying to upload.")
+            ftpPut(inFilename, done);
+          } else{
+            log.warn(JSON.stringify(err,null,2));
+            log.warn(JSON.stringify(res,null,2));
+
+            grunt.warn("Error getting file size");
+          }
+        }
+      });
+    } else {
+      ftpPut(inFilename, done);
+    }
+  }
   // A method that processes a location - changes to a folder and uploads all respective files
   function ftpProcessLocation (inPath, cb) {
     if (!toTransfer[inPath]) {
@@ -125,7 +159,7 @@ module.exports = function (grunt) {
       currPath = inPath;
       files = toTransfer[inPath];
 
-      async.eachSeries(files, ftpPut, function (err) {
+      async.eachSeries(files, prePut, function (err) {
         if (err) {
           grunt.warn('Failed uploading files!');
         }
@@ -160,6 +194,7 @@ module.exports = function (grunt) {
   grunt.registerMultiTask('ftp-deploy', 'Deploy code over FTP', function () {
     var done = this.async();
 
+
     // Init
     ftp = new Ftp({
       host: this.data.auth.host,
@@ -167,13 +202,20 @@ module.exports = function (grunt) {
       onError: done
     });
 
+
     localRoot = Array.isArray(this.data.src) ? this.data.src[0] : this.data.src;
+
     remoteRoot = Array.isArray(this.data.dest) ? this.data.dest[0] : this.data.dest;
+
     authVals = getAuthVals(this.data.auth);
+
     exclusions = this.data.exclusions || [];
     ftp.useList = true;
     toTransfer = dirParseSync(localRoot);
     forceVerbose = this.data.forceVerbose === true ? true : false;
+    newFilesOnly = this.data.newFilesOnly === true ? true : false;
+    uploadOnFileSizeErr = this.data.newFilesOnly === false ? false : true;
+
 
     // Getting all the necessary credentials before we proceed
     var needed = {properties: {}};
