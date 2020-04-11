@@ -58,6 +58,8 @@ The parameters in our configuration are:
 - **dest** - the destination location, the folder on the server we are deploying to
 - **exclusions** - an optional parameter allowing us to exclude files and folders by utilizing grunt's support for [minimatch](https://github.com/isaacs/minimatch). The `matchBase` minimatch option is enabled, so `.git*` would match the path `/foo/bar/.gitignore`.
 - **forceVerbose** - if set to `true` forces the output verbosity.
+- **newFilesOnly** - if set to `true` only files with different size in bytes will be uploaded. Default is `false`
+- **uploadOnFileSizeErr** - if set to `true` file will upload even if ftp SIZE command didn't get its size. Default is `true`
 
 ## Authentication parameters
 
